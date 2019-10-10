@@ -15,7 +15,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-
 @Data
 @Mojo(name = "getfile", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
 public class GetFile extends AbstractMojo {
@@ -26,15 +25,18 @@ public class GetFile extends AbstractMojo {
     @Parameter(property = "filesfolder", defaultValue = "target/")
     private String filesFolder;
 
-    private static String SheetName = ".xlsx";
-
-
+    private static String sheetFormat = ".xlsx";
     private static String exportFormat = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         for (int i = 0; i < links.length; i++) {
             try {
-                downloadUsingNIO(links[i] + exportFormat, filesFolder + i + SheetName);
+                downloadUsingNIO(links[i] + exportFormat, filesFolder + i + sheetFormat);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                SplitFileToSheets.makeALotOfXlsx(filesFolder, i + sheetFormat, i);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,4 +51,5 @@ public class GetFile extends AbstractMojo {
         fos.close();
         rbc.close();
     }
+
 }
