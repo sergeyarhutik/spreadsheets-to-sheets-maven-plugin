@@ -14,7 +14,7 @@ public class SplitFileToSheets {
     public static void makeALotOfXlsx(String filesfolder, String fileName, int fileNumber) throws IOException {
         XSSFWorkbook workbook = getWorkbook(filesfolder + fileName);
         for (int j = 0; j < workbook.getNumberOfSheets(); j++) {
-            String newFilePath = filesfolder + workbook.getSheetName(j) + ".xlsx";
+            String newFilePath = filesfolder + fileNumber + workbook.getSheetName(j) + ".xlsx";
             workbook.setActiveSheet(j);
             FileOutputStream outFile = new FileOutputStream(new File(newFilePath));
             workbook.write(outFile);

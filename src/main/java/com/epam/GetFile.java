@@ -22,13 +22,27 @@ public class GetFile extends AbstractMojo {
     @Parameter(property = "links")
     private String[] links;
 
-    @Parameter(property = "filesfolder", defaultValue = "target/")
+    @Parameter(property = "filesfolder", defaultValue = "target/xlsx/")
     private String filesFolder;
 
     private static String sheetFormat = ".xlsx";
     private static String exportFormat = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+
+        File theDir = new File(filesFolder);
+        if (!theDir.exists()) {
+            boolean result = false;
+            try{
+                theDir.mkdir();
+                result = true;
+            }
+            catch(SecurityException se){
+            }
+            if(result) {
+            }
+        }
+
         for (int i = 0; i < links.length; i++) {
             try {
                 downloadUsingNIO(links[i] + exportFormat, filesFolder + i + sheetFormat);
@@ -51,5 +65,4 @@ public class GetFile extends AbstractMojo {
         fos.close();
         rbc.close();
     }
-
 }
