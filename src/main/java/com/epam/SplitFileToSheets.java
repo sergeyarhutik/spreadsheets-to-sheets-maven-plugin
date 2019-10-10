@@ -1,39 +1,36 @@
 package com.epam;
 
-import lombok.Data;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
-@Data
 public class SplitFileToSheets {
-    public static void makeALotOfXlsx(String filesfolder, String fileName, int fileNumber) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(filesfolder + fileName);
-        for (int j = 0; j < workbook.getNumberOfSheets(); j++) {
-            String newFilePath = filesfolder + fileNumber + workbook.getSheetName(j) + ".xlsx";
-            workbook.setActiveSheet(j);
-            FileOutputStream outFile = new FileOutputStream(new File(newFilePath));
-            workbook.write(outFile);
-            outFile.close();
-            XSSFWorkbook tempWB = getWorkbook(newFilePath);
-            removeAllSheetsExceptOne(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()), tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesfolder, fileNumber);
-            File file = new File(filesfolder + fileName);
-            file.delete();
-        }
+    public static void splitSpreadsheetIntoSheets(String filesFolder, String fileName, int fileNumber) throws IOException {
+
+            XSSFWorkbook workbook = getWorkbook(filesFolder + fileName);
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                String newFilePath = filesFolder + fileNumber + workbook.getSheetName(i) + ".xlsx";
+                workbook.setActiveSheet(i);
+                FileOutputStream outFile = new FileOutputStream(new File(newFilePath));
+                workbook.write(outFile);
+                outFile.close();
+                XSSFWorkbook tempWB = getWorkbook(newFilePath);
+                removeUnnecessarySheets(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()), tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesFolder, fileNumber);
+                File file = new File(filesFolder + fileName);
+                file.delete();
+            }
     }
 
     private static XSSFWorkbook getWorkbook (String documentPath) throws IOException {
         File file = new File(documentPath);
         FileInputStream inputStream = new FileInputStream(file);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+        inputStream.close();
         return workbook;
     }
 
-    private static void removeAllSheetsExceptOne (XSSFWorkbook workbook, String sheetName, String newSheetName, String filesfolder, int fileNumber) throws
+    private static void removeUnnecessarySheets (XSSFWorkbook workbook, String sheetName, String newSheetName, String filesfolder, int fileNumber) throws
             IOException {
         for (int i = workbook.getNumberOfSheets() - 1; i >= 0; i--) {
             XSSFSheet tmpSheet = workbook.getSheetAt(i);

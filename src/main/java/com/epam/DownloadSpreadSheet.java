@@ -1,7 +1,5 @@
 package com.epam;
 
-import lombok.Data;
-
 import java.io.*;
 import java.io.IOException;
 import java.net.URL;
@@ -15,55 +13,45 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-@Data
-@Mojo(name = "getfile", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
-public class GetFile extends AbstractMojo {
+@Mojo(name = "getsheets", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
+public class DownloadSpreadSheet extends AbstractMojo {
 
     @Parameter(property = "links")
     private String[] links;
 
-    @Parameter(property = "filesfolder", defaultValue = "target/xlsx/")
+    @Parameter(property = "filesfolder", defaultValue = "target/generated-sources/")
     private String filesFolder;
 
-    @Parameter(property = "deleteOriginXlsx", defaultValue = "true")
-    private boolean deleteOriginXlsx;
-
-    private static String sheetFormat = ".xlsx";
-    private static String exportFormat = "/export?format=xlsx";
+    private static String SHEET_FORMAT = ".xlsx";
+    private static String EXPORT_FORMAT = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         File theDir = new File(filesFolder);
         if (!theDir.exists()) {
-            boolean result = false;
             try{
                 theDir.mkdir();
-                result = true;
             }
             catch(SecurityException se){
-            }
-            if(result) {
             }
         }
 
         for (int i = 0; i < links.length; i++) {
             try {
-                downloadUsingNIO(links[i] + exportFormat, filesFolder + i + sheetFormat);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                SplitFileToSheets.makeALotOfXlsx(filesFolder, i + sheetFormat, i);
+                for (int j = 0; j < links.length; j++) {
+                downloadUsingNIO(links[i] + EXPORT_FORMAT, filesFolder + i + SHEET_FORMAT);
+                SplitFileToSheets.splitSpreadsheetIntoSheets(filesFolder, i + SHEET_FORMAT, i);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private static void downloadUsingNIO(String urlStr, String file) throws IOException {
+    private void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
         URL url = new URL(urlStr);
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        FileOutputStream fos = new FileOutputStream(file);
+        FileOutputStream fos = new FileOutputStream(filesFolder);
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         fos.close();
         rbc.close();
