@@ -21,6 +21,8 @@ public class SplitFileToSheets {
             outFile.close();
             XSSFWorkbook tempWB = getWorkbook(newFilePath);
             removeAllSheetsExceptOne(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()), tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesfolder, fileNumber);
+            File file = new File(filesfolder + fileName);
+            file.delete();
         }
     }
 

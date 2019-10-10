@@ -25,6 +25,9 @@ public class GetFile extends AbstractMojo {
     @Parameter(property = "filesfolder", defaultValue = "target/xlsx/")
     private String filesFolder;
 
+    @Parameter(property = "deleteOriginXlsx", defaultValue = "true")
+    private boolean deleteOriginXlsx;
+
     private static String sheetFormat = ".xlsx";
     private static String exportFormat = "/export?format=xlsx";
 
