@@ -12,9 +12,9 @@ public class SplitFileToSheets {
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             String newFilePath = filesFolder + workbook.getSheetName(i) + DownloadSpreadSheet.getSheetFormat();
             workbook.setActiveSheet(i);
-            FileOutputStream outFile = new FileOutputStream(new File(newFilePath));
-            workbook.write(outFile);
-            outFile.close();
+            try(FileOutputStream outFile = new FileOutputStream(new File(newFilePath))) {
+                workbook.write(outFile);
+            }
             XSSFWorkbook tempWB = getWorkbook(newFilePath);
             removeUnnecessarySheets(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()),
                     tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesFolder);
@@ -25,10 +25,11 @@ public class SplitFileToSheets {
 
     private static XSSFWorkbook getWorkbook(String documentPath) throws IOException {
         File file = new File(documentPath);
-        FileInputStream inputStream = new FileInputStream(file);
-        XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-        inputStream.close();
-        return workbook;
+        try(FileInputStream inputStream = new FileInputStream(file)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            inputStream.close();
+            return workbook;
+        }
     }
 
     private static void removeUnnecessarySheets(XSSFWorkbook workbook, String sheetName,

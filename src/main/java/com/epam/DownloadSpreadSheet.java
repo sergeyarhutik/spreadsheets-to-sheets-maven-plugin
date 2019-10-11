@@ -37,21 +37,21 @@ public class DownloadSpreadSheet extends AbstractMojo {
                     } catch (SecurityException se) {
                     }
                 }
-                downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT, fileProperties[i].getPath() + i + SHEET_FORMAT);
-                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(), i + SHEET_FORMAT);
+                downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT,
+                        fileProperties[i].getPath() + i + SHEET_FORMAT);
+                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(),
+                        i + SHEET_FORMAT);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.exit(0);
     }
 
     private static void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
         URL url = new URL(urlStr);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        FileOutputStream fos = new FileOutputStream(filesFolder);
+        try(ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            FileOutputStream fos = new FileOutputStream(filesFolder)) {
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        fos.close();
-        rbc.close();
+        }
     }
 }
