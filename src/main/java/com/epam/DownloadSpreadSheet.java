@@ -19,27 +19,32 @@ public class DownloadSpreadSheet extends AbstractMojo {
     @Parameter(property = "filesproperties")
     private FileProperties[] fileProperties;
 
-    private static String SHEET_FORMAT = ".xlsx";
     private static String EXPORT_FORMAT = "/export?format=xlsx";
+    private static String SHEET_FORMAT = ".xlsx";
+
+    public static String getSheetFormat() {
+        return SHEET_FORMAT;
+    }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-            try {
-                for (int i = 0; i < fileProperties.length; i++) {
-                    File theDir = new File(fileProperties[i].getPath());
-                    if (!theDir.exists()) {
-                        try {
-                            theDir.mkdir();
-                        } catch (SecurityException se) {
-                        }
+        try {
+            for (int i = 0; i < fileProperties.length; i++) {
+                File theDir = new File(fileProperties[i].getPath());
+                if (!theDir.exists()) {
+                    try {
+                        theDir.mkdir();
+                    } catch (SecurityException se) {
                     }
-                    downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT, fileProperties[i].getPath() + i + SHEET_FORMAT);
-                    SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(), i + SHEET_FORMAT);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT, fileProperties[i].getPath() + i + SHEET_FORMAT);
+                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(), i + SHEET_FORMAT);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        System.exit(0);
+    }
 
     private void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
         URL url = new URL(urlStr);

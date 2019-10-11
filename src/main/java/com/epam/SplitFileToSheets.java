@@ -10,13 +10,14 @@ public class SplitFileToSheets {
 
             XSSFWorkbook workbook = getWorkbook(filesFolder + fileName);
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-                String newFilePath = filesFolder + workbook.getSheetName(i) + ".xlsx";
+                String newFilePath = filesFolder + workbook.getSheetName(i) + DownloadSpreadSheet.getSheetFormat();
                 workbook.setActiveSheet(i);
                 FileOutputStream outFile = new FileOutputStream(new File(newFilePath));
                 workbook.write(outFile);
                 outFile.close();
                 XSSFWorkbook tempWB = getWorkbook(newFilePath);
-                removeUnnecessarySheets(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()), tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesFolder);
+                removeUnnecessarySheets(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()),
+                        tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesFolder);
                 File file = new File(filesFolder + fileName);
                 file.delete();
             }
@@ -30,7 +31,8 @@ public class SplitFileToSheets {
         return workbook;
     }
 
-    private static void removeUnnecessarySheets (XSSFWorkbook workbook, String sheetName, String newSheetName, String filesfolder) throws
+    private static void removeUnnecessarySheets (XSSFWorkbook workbook, String sheetName,
+                                                 String newSheetName, String filesfolder) throws
             IOException {
         for (int i = workbook.getNumberOfSheets() - 1; i >= 0; i--) {
             XSSFSheet tmpSheet = workbook.getSheetAt(i);
@@ -39,7 +41,8 @@ public class SplitFileToSheets {
             }
         }
         workbook.setSheetName(0, newSheetName);
-        FileOutputStream outFile = new FileOutputStream(new File(filesfolder +  workbook.getSheetName(workbook.getActiveSheetIndex())) + ".xlsx");
+        FileOutputStream outFile = new FileOutputStream(new File(filesfolder +
+                workbook.getSheetName(workbook.getActiveSheetIndex())) + DownloadSpreadSheet.getSheetFormat());
         workbook.write(outFile);
         outFile.close();
     }
