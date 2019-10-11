@@ -16,37 +16,30 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "getsheets", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
 public class DownloadSpreadSheet extends AbstractMojo {
 
-    @Parameter(property = "links")
-    private String[] links;
-
-    @Parameter(property = "filesfolder", defaultValue = "target/generated-sources/")
-    private String filesFolder;
+    @Parameter(property = "filesproperties")
+    private FileProperties[] fileProperties;
 
     private static String SHEET_FORMAT = ".xlsx";
     private static String EXPORT_FORMAT = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        File theDir = new File(filesFolder);
-        if (!theDir.exists()) {
-            try{
-                theDir.mkdir();
-            }
-            catch(SecurityException se){
-            }
-        }
-
-        for (int i = 0; i < links.length; i++) {
             try {
-                for (int j = 0; j < links.length; j++) {
-                downloadUsingNIO(links[i] + EXPORT_FORMAT, filesFolder + i + SHEET_FORMAT);
-                SplitFileToSheets.splitSpreadsheetIntoSheets(filesFolder, i + SHEET_FORMAT, i);
+                for (int i = 0; i < fileProperties.length; i++) {
+                    File theDir = new File(fileProperties[i].getPath());
+                    if (!theDir.exists()) {
+                        try {
+                            theDir.mkdir();
+                        } catch (SecurityException se) {
+                        }
+                    }
+                    downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT, fileProperties[i].getPath() + i + SHEET_FORMAT);
+                    SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(), i + SHEET_FORMAT);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
 
     private void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
         URL url = new URL(urlStr);
