@@ -2,8 +2,9 @@ package com.epam;
 
 public class FileProperties {
 
-    static String link;
-    static String path;
+
+    private String link;
+    private String path;
 
     public String getLink() {
         return link;

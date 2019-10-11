@@ -29,7 +29,7 @@ public class DownloadSpreadSheet extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         try {
-            for (int i = 0; i < fileProperties.length; i++) {
+            for (int i = 0; i < 2; i++) {
                 File theDir = new File(fileProperties[i].getPath());
                 if (!theDir.exists()) {
                     try {
@@ -46,7 +46,7 @@ public class DownloadSpreadSheet extends AbstractMojo {
         System.exit(0);
     }
 
-    private void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
+    private static void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
         URL url = new URL(urlStr);
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
         FileOutputStream fos = new FileOutputStream(filesFolder);
