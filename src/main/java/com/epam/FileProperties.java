@@ -2,17 +2,13 @@ package com.epam;
 
 public class FileProperties {
 
-
     private String link;
     private String path;
     private String format;
 
     public String getFormat() {
         // checking the first (dot) character in a string
-        if (!format.substring(0,0).equals(".")){
             return "." + format;
-        }
-        return format;
     }
 
     public void setFormat(String format) {

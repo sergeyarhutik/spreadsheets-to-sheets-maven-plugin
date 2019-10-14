@@ -2,6 +2,7 @@ package com.epam;
 
 import java.io.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -23,12 +24,13 @@ public class DownloadSpreadSheet extends AbstractMojo {
     private static String EXPORT_FORMAT = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
         try {
             for (int i = 0; i < fileProperties.length; i++) {
                 createFilePath(fileProperties[i]);
                 downloadResource(fileProperties[i], i);
-                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i], i);
+                if (fileProperties[i].getFormat().equals(".xlsx")) {
+                    SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i], i);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,10 +38,20 @@ public class DownloadSpreadSheet extends AbstractMojo {
     }
 
     private static void downloadResource(FileProperties fileProperties, int i) throws IOException {
-        URL url = new URL(fileProperties.getLink() + EXPORT_FORMAT);
+        URL url = getLinkForDownload(fileProperties);
         try (ReadableByteChannel rbc = Channels.newChannel(url.openStream());
              FileOutputStream fos = new FileOutputStream(fileProperties.getPath() + i + fileProperties.getFormat())) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        }
+    }
+
+    public static URL getLinkForDownload(FileProperties fileProperties) throws MalformedURLException {
+        if (fileProperties.getFormat().equals(".xlsx")) {
+            URL url = new URL(fileProperties.getLink() + EXPORT_FORMAT);
+            return url;
+        } else {
+            URL url = new URL(fileProperties.getLink());
+            return url;
         }
     }
 
