@@ -6,19 +6,18 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 
 public class SplitFileToSheets {
-    public static void splitSpreadsheetIntoSheets(String filesFolder, String fileName) throws IOException {
+    public static void splitSpreadsheetIntoSheets(FileProperties fileProperties, int filesNumber) throws IOException {
 
-        XSSFWorkbook workbook = getWorkbook(filesFolder + fileName);
+        XSSFWorkbook workbook = getWorkbook(fileProperties.getPath() + filesNumber + fileProperties.getFormat());
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-            String newFilePath = filesFolder + workbook.getSheetName(i) + DownloadSpreadSheet.getSheetFormat();
+            String newFilePath = fileProperties.getPath() + workbook.getSheetName(i) + fileProperties.getFormat();
             workbook.setActiveSheet(i);
             try(FileOutputStream outFile = new FileOutputStream(new File(newFilePath))) {
                 workbook.write(outFile);
             }
             XSSFWorkbook tempWB = getWorkbook(newFilePath);
-            removeUnnecessarySheets(tempWB, tempWB.getSheetName(tempWB.getActiveSheetIndex()),
-                    tempWB.getSheetName(tempWB.getActiveSheetIndex()), filesFolder);
-            File file = new File(filesFolder + fileName);
+            removeUnnecessarySheets(tempWB, fileProperties, tempWB.getSheetName(tempWB.getActiveSheetIndex()));
+            File file = new File(fileProperties.getPath() + filesNumber + fileProperties.getFormat());
             file.delete();
         }
     }
@@ -32,8 +31,7 @@ public class SplitFileToSheets {
         }
     }
 
-    private static void removeUnnecessarySheets(XSSFWorkbook workbook, String sheetName,
-                                                String newSheetName, String filesfolder) throws
+    private static void removeUnnecessarySheets(XSSFWorkbook workbook, FileProperties fileProperties, String sheetName) throws
             IOException {
         for (int i = workbook.getNumberOfSheets() - 1; i >= 0; i--) {
             XSSFSheet tmpSheet = workbook.getSheetAt(i);
@@ -41,9 +39,9 @@ public class SplitFileToSheets {
                 workbook.removeSheetAt(i);
             }
         }
-        workbook.setSheetName(0, newSheetName);
-        FileOutputStream outFile = new FileOutputStream(new File(filesfolder +
-                workbook.getSheetName(workbook.getActiveSheetIndex())) + DownloadSpreadSheet.getSheetFormat());
+        workbook.setSheetName(0, sheetName);
+        FileOutputStream outFile = new FileOutputStream(new File(fileProperties.getPath() +
+                sheetName + fileProperties.getFormat()));
         workbook.write(outFile);
         outFile.close();
     }

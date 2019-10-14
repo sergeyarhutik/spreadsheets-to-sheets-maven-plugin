@@ -19,39 +19,34 @@ public class DownloadSpreadSheet extends AbstractMojo {
     @Parameter(property = "filesproperties")
     private FileProperties[] fileProperties;
 
-    private static String EXPORT_FORMAT = "/export?format=xlsx";
-    private static String SHEET_FORMAT = ".xlsx";
 
-    public static String getSheetFormat() {
-        return SHEET_FORMAT;
-    }
+    private static String EXPORT_FORMAT = "/export?format=xlsx";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         try {
-            for (int i = 0; i < 2; i++) {
-                File theDir = new File(fileProperties[i].getPath());
-                if (!theDir.exists()) {
-                    try {
-                        theDir.mkdir();
-                    } catch (SecurityException se) {
-                    }
-                }
-                downloadUsingNIO(fileProperties[i].getLink() + EXPORT_FORMAT,
-                        fileProperties[i].getPath() + i + SHEET_FORMAT);
-                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i].getPath(),
-                        i + SHEET_FORMAT);
+            for (int i = 0; i < fileProperties.length; i++) {
+                createFilePath(fileProperties[i]);
+                downloadResource(fileProperties[i], i);
+                SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i], i);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void downloadUsingNIO(String urlStr, String filesFolder) throws IOException {
-        URL url = new URL(urlStr);
-        try(ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(filesFolder)) {
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+    private static void downloadResource(FileProperties fileProperties, int i) throws IOException {
+        URL url = new URL(fileProperties.getLink() + EXPORT_FORMAT);
+        try (ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+             FileOutputStream fos = new FileOutputStream(fileProperties.getPath() + i + fileProperties.getFormat())) {
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        }
+    }
+
+    private static void createFilePath(FileProperties fileProperties) {
+        File dir = new File(fileProperties.getPath());
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
     }
 }

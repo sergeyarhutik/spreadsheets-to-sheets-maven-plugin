@@ -24,11 +24,11 @@ Example of usage:
                         <fileProperties>
                             <fileProperty>
                                 <link>https://docs.google.com/spreadsheets/d/1imI9QfF25kZRTlGBPSddsFmmi9QPztXhSLAsH3YmlJU</link>
-                                <path>target/132/</path>
+                                <path>target/132</path>
                             </fileProperty>
                             <fileProperty>
                                 <link>https://docs.google.com/spreadsheets/d/19Ps-e1VT12Ciymn6-Ih6pwYpRp9IwTI1JVYqKhBYzro</link>
-                                <path>target/213213/</path>
+                                <path>target/213213</path>
                             </fileProperty>
                         </fileProperties>
                     </configuration>
