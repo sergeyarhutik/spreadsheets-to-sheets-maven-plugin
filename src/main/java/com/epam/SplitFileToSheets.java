@@ -22,7 +22,9 @@ public class SplitFileToSheets {
             }
             XSSFWorkbook tempWB = getWorkbook(newFilePath);
             removeUnnecessarySheets(tempWB, fileProperties, tempWB.getSheetName(tempWB.getActiveSheetIndex()));
-            File file = new File(fileProperties.getPath() + filesNumber + fileProperties.getFormat());
+            URL url1 = getLinkForDownload(fileProperties);
+            String fileName1 = Paths.get(url1.getPath()).getFileName().toString();
+            File file = new File(fileProperties.getPath() + fileName1);
             file.delete();
         }
     }
