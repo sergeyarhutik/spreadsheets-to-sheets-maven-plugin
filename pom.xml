@@ -9,7 +9,7 @@
   <name>google-sheets-to-xlsx-maven-plugin</name>
 
   <properties>
-    <java.version>8</java.version>
+    <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
