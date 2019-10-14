@@ -4,11 +4,16 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Paths;
+
+import static com.epam.DownloadSpreadSheet.getLinkForDownload;
 
 public class SplitFileToSheets {
     public static void splitSpreadsheetIntoSheets(FileProperties fileProperties, int filesNumber) throws IOException {
-
-        XSSFWorkbook workbook = getWorkbook(fileProperties.getPath() + filesNumber + fileProperties.getFormat());
+        URL url = getLinkForDownload(fileProperties);
+        String fileName = Paths.get(url.getPath()).getFileName().toString();
+        XSSFWorkbook workbook = getWorkbook(fileProperties.getPath() + fileName);
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             String newFilePath = fileProperties.getPath() + workbook.getSheetName(i) + fileProperties.getFormat();
             workbook.setActiveSheet(i);

@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Paths;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,7 +28,7 @@ public class DownloadSpreadSheet extends AbstractMojo {
         try {
             for (int i = 0; i < fileProperties.length; i++) {
                 createFilePath(fileProperties[i]);
-                downloadResource(fileProperties[i], i);
+                downloadResource(fileProperties[i]);
                 if (fileProperties[i].getFormat().equals(".xlsx")) {
                     SplitFileToSheets.splitSpreadsheetIntoSheets(fileProperties[i], i);
                 }
@@ -37,10 +38,11 @@ public class DownloadSpreadSheet extends AbstractMojo {
         }
     }
 
-    private static void downloadResource(FileProperties fileProperties, int i) throws IOException {
+    private static void downloadResource(FileProperties fileProperties) throws IOException {
         URL url = getLinkForDownload(fileProperties);
+        String fileName = Paths.get(url.getPath()).getFileName().toString();
         try (ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-             FileOutputStream fos = new FileOutputStream(fileProperties.getPath() + i + fileProperties.getFormat())) {
+             FileOutputStream fos = new FileOutputStream(fileProperties.getPath() + fileName)) {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
     }
