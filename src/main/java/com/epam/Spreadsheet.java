@@ -1,23 +1,14 @@
 package com.epam;
 
-public class FileProperties {
-
+public class Spreadsheet {
 
     private String link;
     private String path;
-    private String format;
 
     public String getFormat() {
-        // checking the first (dot) character in a string
-        if (!format.substring(0,0).equals(".")){
-            return "." + format;
-        }
-        return format;
+        return ".xlsx";
     }
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
 
     public String getLink() {
         return link;
@@ -29,7 +20,7 @@ public class FileProperties {
 
     public String getPath() {
         // checking the last character in a string
-        if (!path.substring(path.length() - 1).equals("/")){
+        if (!path.endsWith("/")) {
             return path + "/";
         }
         return path;
