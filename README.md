@@ -8,33 +8,35 @@ Example of usage:
 - pom.xml
 
 ```xml
-<build>
-    <plugins>
-         <plugin>
-            <groupId>com.epam</groupId>
-            <artifactId>google-sheets-to-xlsx-maven-plugin</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <executions>
-                <execution>
-                    <phase>compile</phase>
-                    <goals>
-                        <goal>getsheets</goal>
-                    </goals>
-                    <configuration>
-                        <fileProperties>
-                            <fileProperty>
-                                <link>https://docs.google.com/spreadsheets/d/1imI9QfF25kZRTlGBPSddsFmmi9QPztXhSLAsH3YmlJU</link>
-                                <path>target/132</path>
-                            </fileProperty>
-                            <fileProperty>
-                                <link>https://docs.google.com/spreadsheets/d/19Ps-e1VT12Ciymn6-Ih6pwYpRp9IwTI1JVYqKhBYzro</link>
-                                <path>target/213213</path>
-                            </fileProperty>
-                        </fileProperties>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.epam</groupId>
+                <artifactId>spreadsheets-to-xlsx-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>
+                                getsheets
+                            </goal>
+                        </goals>
+                        <configuration>
+                            <spreadsheet>
+                                <spreadsheet>
+                                    <link>https://docs.google.com/spreadsheets/d/19Ps-e1VT12Ciymn6-Ih6pwYpRp9IwTI1JVYqKhBYzro/export?format=xlsx</link>
+                                    <path>target/somedir1/</path>
+                                </spreadsheet>
+                                   <spreadsheet>
+                                    <link>https://docs.google.com/spreadsheets/d/19Ps-e1VT12Ciymn6-Ih6pwYpRp9IwTI1JVYqKhBYzro/export?format=xlsx</link>
+                                    <path>target/somedir2/</path>
+                                </spreadsheet>
+                            </spreadsheet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 ```
