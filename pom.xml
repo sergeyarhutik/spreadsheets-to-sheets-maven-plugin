@@ -15,7 +15,7 @@
     <junit.platform.version>1.5.2</junit.platform.version>
     <maven.plugin.api.version>3.6.2</maven.plugin.api.version>
     <maven.plugin.annotations.version>3.6.0</maven.plugin.annotations.version>
-    <poi.version>3.17</poi.version>
+    <poi.version>4.1.1</poi.version>
     <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
     <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <junit.platform.surefire.provider>1.2.0-M1</junit.platform.surefire.provider>
